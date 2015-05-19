@@ -1,3 +1,5 @@
+#ifndef NO_IO_DEPENDENCIES
+
 #include <cstring>
 #include <string>
 #include <vector>
@@ -2919,3 +2921,5 @@ TEST_F(NetUpgradeTest, TestUpgradeV1LayerType) {
 }
 
 }  // NOLINT(readability/fn_size)  // namespace caffe
+
+#endif

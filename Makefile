@@ -1,6 +1,6 @@
 PROJECT := caffe
 
-CONFIG_FILE := Makefile.config
+CONFIG_FILE ?= Makefile.config
 # Explicitly check for the config file, otherwise make -k will proceed anyway.
 ifeq ($(wildcard $(CONFIG_FILE)),)
 $(error $(CONFIG_FILE) not found. See $(CONFIG_FILE).example.)
@@ -169,9 +169,12 @@ ifneq ($(CPU_ONLY), 1)
 	LIBRARY_DIRS += $(CUDA_LIB_DIR)
 	LIBRARIES := cudart cublas curand
 endif
-LIBRARIES += glog gflags protobuf leveldb snappy \
-	lmdb boost_system hdf5_hl hdf5 m \
-	opencv_core opencv_highgui opencv_imgproc
+ifneq ($(NO_IO_DEPENDENCIES), 1)
+	LIBRARIES += leveldb lmdb snappy hdf5_hl hdf5
+endif
+LIBRARIES += glog gflags protobuf m boost_system \
+             opencv_core opencv_highgui opencv_imgproc
+
 PYTHON_LIBRARIES := boost_python python2.7
 WARNINGS := -Wall -Wno-sign-compare
 
@@ -306,6 +309,11 @@ ifeq ($(BENCHMARK_DATA), 1)
 endif
 ifeq ($(BENCHMARK_SOLVER), 1)
 	COMMON_FLAGS += -DBENCHMARK_SOLVER
+endif
+
+# No IO dependencies
+ifeq ($(NO_IO_DEPENDENCIES), 1)
+	COMMON_FLAGS += -DNO_IO_DEPENDENCIES
 endif
 
 # Python layer support

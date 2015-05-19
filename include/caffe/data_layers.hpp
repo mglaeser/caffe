@@ -5,7 +5,9 @@
 #include <utility>
 #include <vector>
 
+#ifndef NO_IO_DEPENDENCIES
 #include "hdf5.h"
+#endif
 
 #include "caffe/blob.hpp"
 #include "caffe/common.hpp"
@@ -138,6 +140,8 @@ class DummyDataLayer : public Layer<Dtype> {
   vector<bool> refill_;
 };
 
+#ifndef NO_IO_DEPENDENCIES
+
 /**
  * @brief Provides data to the Net from HDF5 files.
  *
@@ -248,6 +252,8 @@ class ImageDataLayer : public BasePrefetchingDataLayer<Dtype> {
   int lines_id_;
 };
 
+#endif
+
 /**
  * @brief Provides data to the Net from memory.
  *
@@ -282,6 +288,8 @@ class MemoryDataLayer : public BaseDataLayer<Dtype> {
  protected:
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
+  virtual void Forward_gpu(const vector<Blob<Dtype>*>& bottom,
+      const vector<Blob<Dtype>*>& top);
 
   int batch_size_, channels_, height_, width_, size_;
   Dtype* data_;
@@ -292,6 +300,8 @@ class MemoryDataLayer : public BaseDataLayer<Dtype> {
   Blob<Dtype> added_label_;
   bool has_new_data_;
 };
+
+#ifndef NO_IO_DEPENDENCIES
 
 /**
  * @brief Provides data to the Net from windows of images files, specified
@@ -328,6 +338,8 @@ class WindowDataLayer : public BasePrefetchingDataLayer<Dtype> {
   bool cache_images_;
   vector<std::pair<std::string, Datum > > image_database_cache_;
 };
+
+#endif
 
 }  // namespace caffe
 

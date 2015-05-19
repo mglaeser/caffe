@@ -96,6 +96,14 @@ const void* SyncedMemory::gpu_data() {
 
 void SyncedMemory::set_gpu_data(void* data) {
 #ifndef CPU_ONLY
+//#ifdef DEBUG
+  int device;
+  CUDA_CHECK(cudaGetDevice(&device));
+  cudaPointerAttributes attributes;
+  CUDA_CHECK(cudaPointerGetAttributes(&attributes, data));
+  CHECK(attributes.device == device);
+//#endif
+
   CHECK(data);
   if (own_gpu_data_) {
     CUDA_CHECK(cudaFree(gpu_ptr_));
