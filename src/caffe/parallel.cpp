@@ -278,6 +278,7 @@ class Worker : public InternalThread {
     CHECK_EQ(device, device_);
 #endif
     shared_ptr<Solver<Dtype> > s(SolverRegistry<Dtype>::CreateSolver(param));
+    CHECK_EQ(s->type(), rank0_->type());
     if (restore_) {
       // Could not make NCCL broadcast solver state, it seems to crash
       // if called in a tight loop, regardless of barriers etc. so
