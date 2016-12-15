@@ -19,14 +19,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python-dev \
         python-numpy \
         python-pip \
+        python-setuptools \
         python-scipy && \
     rm -rf /var/lib/apt/lists/*
 
 ENV CAFFE_ROOT=/opt/caffe
 WORKDIR $CAFFE_ROOT
 
-RUN git clone --depth 1 --branch nccl --single-branch https://github.com/cypof/caffe.git . && \
+RUN git clone --branch nccl https://github.com/cypof/caffe.git . && \
     git checkout d6fd394bb1b4930c13b1178ec53d6716265bf577 && \
+    pip install --upgrade pip && \
     cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd .. && \
     git clone https://github.com/NVIDIA/nccl.git && cd nccl && make -j install && cd .. && \
     mkdir build && cd build && \
