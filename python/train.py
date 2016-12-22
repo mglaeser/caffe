@@ -67,6 +67,7 @@ def solve(proto, snapshot, gpus, timing, uid, rank):
     caffe.set_device(gpus[rank])
     caffe.set_solver_count(len(gpus))
     caffe.set_solver_rank(rank)
+    caffe.set_multiprocess(True)
 
     solver = caffe.SGDSolver(proto)
     if snapshot and len(snapshot) != 0:
