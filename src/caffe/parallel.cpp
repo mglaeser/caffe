@@ -1,6 +1,5 @@
 #ifdef USE_NCCL
 
-#include <core.h>
 #include <cuda_runtime.h>
 #include <glog/logging.h>
 #include <stdio.h>
